@@ -25,11 +25,11 @@ impl EventHandler for Handler {
         }
       }
       if msg.content == "c~avatar" {
-		      let avatar_url = msg.author.face();
+	  let avatar_url = msg.author.face();
           if let Err(why) = msg.channel_id.send_message(&ctx.http, |cm| cm.embed(|ce| 
                 ce.title(format!("Here's your avatar {}", msg.author.name))
                 .color(0x00d6ff)
-				        .image(&avatar_url)
+		.image(&avatar_url)
             )).await {
             println!("Error sending message: {:?}", why);
           }
