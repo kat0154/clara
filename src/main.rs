@@ -24,15 +24,24 @@ impl EventHandler for Handler {
           println!("Error sending message: {:?}", why);
         }
       }
-      if msg.content == "c~avatar" {
-	  let avatar_url = msg.author.face();
-          if let Err(why) = msg.channel_id.send_message(&ctx.http, |cm| cm.embed(|ce| 
-                ce.title(format!("Here's your avatar {}", msg.author.name))
-                .color(0x00d6ff)
-		.image(&avatar_url)
-            )).await {
-            println!("Error sending message: {:?}", why);
-          }
+      if msg.content.starts_with("c~avatar") {
+	    if msg.mentions.len() > 0 { 
+		if let Err(y) = msg.channel_id.send_message(&ctx.http, |cm| cm.embed(|ce| 
+                	ce.title(format!("Here's the avatar for {}", msg.mentions[0].name))
+                	.color(0x00d6ff)
+			.image(&msg.mentions[0].face())
+           	)).await {
+			println!("Error sending message: {:?}", y);
+	    	}
+	    } else {
+		if let Err(why) = msg.channel_id.send_message(&ctx.http, |cm| cm.embed(|ce| 
+                	ce.title(format!("Here's your avatar {}", msg.author.name))
+                	.color(0x00d6ff)
+			.image(&msg.author.face())
+                )).await {
+			println!("Error sending message: {:?}", why);
+		}
+	    }
       }
       if let (Some("c~say"), Some(me)) = (command, args) {
         if let Err(y) = msg.delete(&ctx.http).await {
