@@ -19,12 +19,12 @@ impl EventHandler for Handler {
       let mut m = msg.content.splitn(2, ' ');
       let command = m.next();
       let args = m.next();
-      if msg.content == "c~ping" {
+      if msg.content == "...ping" {
         if let Err(why) = msg.channel_id.say(&ctx.http, "pong?").await {
           println!("Error sending message: {:?}", why);
         }
       }
-      if msg.content.starts_with("c~avatar") {
+      if msg.content.starts_with("...avatar") {
 	    if msg.mentions.len() > 0 { 
 		if let Err(y) = msg.channel_id.send_message(&ctx.http, |cm| cm.embed(|ce| 
                 	ce.title(format!("Here's the avatar for {}", msg.mentions[0].name))
@@ -43,7 +43,7 @@ impl EventHandler for Handler {
 		}
 	    }
       }
-      if let (Some("c~say"), Some(me)) = (command, args) {
+      if let (Some("...say"), Some(me)) = (command, args) {
         if let Err(y) = msg.delete(&ctx.http).await {
           println!("Error sending message: {:?}", y);
         }
@@ -56,7 +56,8 @@ impl EventHandler for Handler {
 
 #[tokio::main]
   async fn main() {
-    let token: &str = "botto-token";
+    let token = env::var("TOKEN")
+     .expect("Expected a token in the environment");
 
     let mut client = Client::builder(&token)
       .event_handler(Handler)
