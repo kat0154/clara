@@ -3,6 +3,7 @@ use serenity::{
   model::{channel::Message, gateway::Ready},
   prelude::*,
 };
+use std::env;
 use serenity::model::prelude::Activity;
 
 struct Handler;
